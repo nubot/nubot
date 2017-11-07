@@ -18,7 +18,7 @@ namespace NuBot
 
         public IBotBuilder UseAdapter(IChatAdapter chatAdapter)
         {
-            _chatAdapter = chatAdapter;
+            _chatAdapter = chatAdapter ?? throw new ArgumentNullException(nameof(chatAdapter));
             return this;
         }
     }
