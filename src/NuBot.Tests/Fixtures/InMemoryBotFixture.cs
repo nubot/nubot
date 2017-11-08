@@ -23,6 +23,8 @@ namespace NuBot.Tests.Fixtures
 
             public event AsyncEventHandler<MessageEventArgs> MessageReceived;
 
+            public string Name => "TestBot";
+
             public TestAdapter(StringBuilder builder)
             {
                 _builder = builder;
@@ -63,12 +65,12 @@ namespace NuBot.Tests.Fixtures
 
         public static InMemoryBotFixture Hear(string pattern, Func<IContext, Task> callback)
         {
-            var builder = new StringBuilder();
-            var adapter = new TestAdapter(builder);
-            var bot = new DefaultBot(adapter);
-            bot.Hear(pattern, callback);
+            return BuildBot(bot => bot.Hear(pattern, callback));            
+        }
 
-            return new InMemoryBotFixture(bot, adapter, builder);
+        public static InMemoryBotFixture Respond(string pattern, Func<IContext, Task> callback)
+        {
+            return BuildBot(bot => bot.Respond(pattern, callback));
         }
 
         public async Task<string> SendAsync(string messageContent)
@@ -76,6 +78,16 @@ namespace NuBot.Tests.Fixtures
             await _chatAdapter.RaiseMessageReceivedAsync(messageContent);
 
             return _builder.ToString();
+        }
+
+        private static InMemoryBotFixture BuildBot(Action<IBot> botSetup)
+        {
+            var builder = new StringBuilder();
+            var adapter = new TestAdapter(builder);
+            var bot = new Bot(adapter);
+            botSetup(bot);
+
+            return new InMemoryBotFixture(bot, adapter, builder);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace NuBot.Adapters
     {
         event AsyncEventHandler<MessageEventArgs> MessageReceived;
 
+        string Name { get; }
+
         Task RunAsync(CancellationToken cancellationToken);
 
         Task SendAsync(string content, CancellationToken cancellationToken);

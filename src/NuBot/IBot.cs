@@ -6,5 +6,7 @@ namespace NuBot
     public interface IBot
     {
         void Hear(string pattern, Func<IContext, Task> callback);
+
+        void Respond(string pattern, Func<IContext, Task> callback);
     }
 }

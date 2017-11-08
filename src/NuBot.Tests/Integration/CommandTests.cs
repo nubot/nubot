@@ -54,5 +54,43 @@ namespace NuBot.Tests.Integration
                 Assert.Equal("OK", response);
             }
         }
+
+        public class TheRespondMethod
+        {
+            [Theory]
+            [InlineData("@TestBot Test")]
+            [InlineData("TestBot Test")]
+            public async Task Responds_When_Mentioned(string message)
+            {
+                // Given
+                var fixture = InMemoryBotFixture.Respond("Test", async (ctx) =>
+                {
+                    await ctx.SendAsync("OK");
+                });
+
+                // When
+                var response = await fixture.SendAsync(message);
+
+                // Then
+                Assert.Equal("OK", response);
+            }
+
+            [Theory]
+            [InlineData("foo @TestBot hello")]
+            [InlineData("foo TestBot hello")]
+            public async Task Ignores_Mid_Sentence_Mentions(string message)
+            {
+                // Given
+                var fixture = InMemoryBotFixture.Respond("hello", async (ctx) => {
+                    await ctx.SendAsync("Shouldn't happen!");
+                });
+
+                // When
+                var response = await fixture.SendAsync(message);
+
+                // Then
+                Assert.Equal(string.Empty, response);
+            }
+        }
     }
 }

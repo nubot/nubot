@@ -6,12 +6,12 @@ using NuBot.Adapters;
 
 namespace NuBot
 {
-    internal sealed class DefaultBot : IBot
+    internal sealed class Bot : IBot
     {
         private readonly IChatAdapter _chatAdapter;
         private readonly IList<IListener> _listeners;
 
-        public DefaultBot(IChatAdapter chatAdapter)
+        public Bot(IChatAdapter chatAdapter)
         {
             _chatAdapter = chatAdapter ?? throw new ArgumentNullException(nameof(chatAdapter));
             _chatAdapter.MessageReceived += OnMessageReceived;
@@ -21,6 +21,12 @@ namespace NuBot
         public void Hear(string pattern, Func<IContext, Task> callback)
         {
             _listeners.Add(new TextListener(pattern, callback));
+        }
+
+        public void Respond(string pattern, Func<IContext, Task> callback)
+        {
+            var mentionPattern = $"^[@]?{_chatAdapter.Name}\\s{pattern}";
+            _listeners.Add(new TextListener(mentionPattern, callback));
         }
 
         private async Task OnMessageReceived(object sender, MessageEventArgs args)
