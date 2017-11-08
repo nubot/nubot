@@ -6,7 +6,7 @@ namespace NuBot
     {
         public static IBotBuilder CreateDefaultBuilder(string[] args)
         {
-            return new DefaultBotBuilder();
+            return new BotBuilder();
         }
 
         public void Run()

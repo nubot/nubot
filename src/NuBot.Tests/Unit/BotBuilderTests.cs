@@ -4,7 +4,7 @@ using Xunit;
 
 namespace NuBot.Tests.Unit
 {
-    public sealed class DefaultBotBuilderTests
+    public sealed class BotBuilderTests
     {
         public sealed class TheUseAdapterMethod
         {
@@ -12,7 +12,7 @@ namespace NuBot.Tests.Unit
             public void Throws_If_Chat_Adapter_Is_Null()
             {
                 // Given
-                var builder = new DefaultBotBuilder();
+                var builder = new BotBuilder();
 
                 // When
                 var exception = Assert.Throws<ArgumentNullException>(() => builder.UseAdapter(null));

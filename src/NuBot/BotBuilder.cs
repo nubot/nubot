@@ -3,11 +3,11 @@ using NuBot.Adapters;
 
 namespace NuBot
 {
-    internal sealed class DefaultBotBuilder : IBotBuilder
+    internal sealed class BotBuilder : IBotBuilder
     {
         private IChatAdapter _chatAdapter;
 
-        public DefaultBotBuilder()
+        public BotBuilder()
         {
         }
 
