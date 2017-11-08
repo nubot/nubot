@@ -31,8 +31,12 @@ namespace NuBot
 
             foreach (var listener in listeners)
             {
-                var parameters = new ParameterCollection();
-                var ctx = new Context(_chatAdapter, args.Message, parameters);
+                var parameters = listener.GetParameters(args.Message);
+
+                var ctx = new Context(
+                    _chatAdapter,
+                    args.Message,
+                    new ParameterCollection(parameters));
 
                 await listener.ExecuteAsync(ctx);
             }

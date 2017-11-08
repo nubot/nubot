@@ -28,7 +28,7 @@ namespace NuBot.Tests.Integration
             public async Task Can_Hear_Things_With_Parameters()
             {
                 // Given
-                var fixture = InMemoryBotFixture.Hear("Hello (?<Name>.*)", async (ctx) => {
+                var fixture = InMemoryBotFixture.Hear("Hello (?<Name>[\\w]+)", async (ctx) => {
                     await ctx.SendAsync(ctx.Parameters["Name"].ToString());
                 });
 
@@ -37,6 +37,21 @@ namespace NuBot.Tests.Integration
 
                 // Then
                 Assert.Equal("NuBot", response);
+            }
+
+            [Fact]
+            public async Task Can_Hear_Case_Insensitive_Things()
+            {
+                // Given
+                var fixture = InMemoryBotFixture.Hear("hElO", async (ctx) => {
+                    await ctx.SendAsync("OK");
+                });
+
+                // When
+                var response = await fixture.SendAsync("helo");
+
+                // Then
+                Assert.Equal("OK", response);
             }
         }
     }

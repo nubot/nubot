@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -6,12 +8,15 @@ namespace NuBot
 {
     internal sealed class TextListener : IListener
     {
-        private readonly string _pattern;
+        private readonly Regex _regex;
         private readonly Func<IContext, Task> _callback;
 
         public TextListener(string pattern, Func<IContext, Task> callback)
         {
-            _pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+            _regex = new Regex(
+                pattern ?? throw new ArgumentNullException(nameof(pattern)),
+                RegexOptions.IgnoreCase);
+
             _callback = callback ?? throw new ArgumentNullException(nameof(callback));
         }
 
@@ -20,9 +25,25 @@ namespace NuBot
             await _callback(context);
         }
 
+        public IEnumerable<IParameter> GetParameters(IMessage message)
+        {
+            var result = new List<IParameter>();
+
+            var groupNames = _regex.GetGroupNames();
+            var match = _regex.Match(message.Content);
+
+            foreach (var name in groupNames)
+            {
+                var value = match.Groups[name].Value;
+                result.Add(new Parameter(name, value));
+            }
+
+            return result;
+        }
+
         public bool ShouldHandle(IMessage message)
         {
-            return Regex.IsMatch(message.Content, _pattern);
+            return _regex.IsMatch(message.Content);
         }
     }
 }
