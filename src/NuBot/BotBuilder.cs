@@ -7,7 +7,7 @@ namespace NuBot
     {
         private IChatAdapter _chatAdapter;
 
-        public BotBuilder()
+        internal BotBuilder()
         {
         }
 

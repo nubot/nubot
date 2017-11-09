@@ -27,12 +27,14 @@ namespace NuBot
 
         public IEnumerable<IParameter> GetParameters(IMessage message)
         {
+            const string WholeMatchGroup = "0";
+
             var result = new List<IParameter>();
 
             var groupNames = _regex.GetGroupNames();
             var match = _regex.Match(message.Content);
 
-            foreach (var name in groupNames)
+            foreach (var name in groupNames.Where(gn => gn != WholeMatchGroup))
             {
                 var value = match.Groups[name].Value;
                 result.Add(new Parameter(name, value));
