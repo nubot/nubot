@@ -13,7 +13,8 @@ namespace NuBot
 
         public IBotHost Build()
         {
-            return new BotHost();
+            var bot = new Bot(_chatAdapter);
+            return new BotHost(bot);
         }
 
         public IBotBuilder UseAdapter(IChatAdapter chatAdapter)

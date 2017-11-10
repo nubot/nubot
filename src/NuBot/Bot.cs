@@ -6,7 +6,7 @@ using NuBot.Adapters;
 
 namespace NuBot
 {
-    internal sealed class Bot : IBot
+    internal sealed class Bot : IBotController
     {
         private readonly IChatAdapter _chatAdapter;
         private readonly IList<IListener> _listeners;
@@ -17,6 +17,8 @@ namespace NuBot
             _chatAdapter.MessageReceived += OnMessageReceived;
             _listeners = new List<IListener>();
         }
+
+        public IChatAdapter ChatAdapter => _chatAdapter;
 
         public void Hear(string pattern, Func<IContext, Task> callback)
         {
